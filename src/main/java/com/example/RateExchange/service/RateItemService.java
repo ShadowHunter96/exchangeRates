@@ -15,16 +15,16 @@ import java.util.List;
 @Service
 public class RateItemService {
 
-    private final RateItemRepository rateItemRepository;
-    private final ErsteRatesService ersteRates;
+    private RateItemRepository rateItemRepository;
+    private ErsteRatesService ersteRates;
 
-    public RateItemService(final RateItemRepository rateItemRepository, final ErsteRatesService ersteRates) {
+    public RateItemService(RateItemRepository rateItemRepository, ErsteRatesService ersteRates) {
         this.rateItemRepository = rateItemRepository;
         this.ersteRates = ersteRates;
     }
 
     public List<RateItemDto> findAll() {
-        final List<RateItem> rateItems = rateItemRepository.findAll(Sort.by("id"));
+        List<RateItem> rateItems = rateItemRepository.findAll(Sort.by("id"));
         return rateItems.stream()
                 .map(rateItem -> mapToDTO(rateItem, new RateItemDto()))
                 .toList();
@@ -32,7 +32,7 @@ public class RateItemService {
 
 
     @Transactional
-    public List<RateItemDto> getRates(final boolean usedb) {
+    public List<RateItemDto> getRates(boolean usedb) {
         var remoteRates = ersteRates.fetchRates();
         if (remoteRates == null || remoteRates.isEmpty()) {
             throw new UpstreamServiceException("No data from API.");

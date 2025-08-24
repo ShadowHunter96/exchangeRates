@@ -13,9 +13,9 @@ import java.util.List;
 @RequestMapping(value = "/api/rate-items", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RateItemController {
 
-    private final RateItemService rateItemService;
+    private  RateItemService rateItemService;
 
-    public RateItemController(final RateItemService rateItemService) {
+    public RateItemController( RateItemService rateItemService) {
         this.rateItemService = rateItemService;
     }
 

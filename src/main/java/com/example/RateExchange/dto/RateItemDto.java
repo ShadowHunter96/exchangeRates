@@ -41,7 +41,7 @@ public class RateItemDto {
         return shortName;
     }
 
-    public void setShortName(final String shortName) {
+    public void setShortName(String shortName) {
         this.shortName = shortName;
     }
 
@@ -49,7 +49,7 @@ public class RateItemDto {
         return validFrom;
     }
 
-    public void setValidFrom(final LocalDateTime validFrom) {
+    public void setValidFrom(LocalDateTime validFrom) {
         this.validFrom = validFrom;
     }
 
@@ -57,7 +57,7 @@ public class RateItemDto {
         return name;
     }
 
-    public void setName(final String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -65,7 +65,7 @@ public class RateItemDto {
         return country;
     }
 
-    public void setCountry(final String country) {
+    public void setCountry(String country) {
         this.country = country;
     }
 
@@ -73,7 +73,7 @@ public class RateItemDto {
         return move;
     }
 
-    public void setMove(final Double move) {
+    public void setMove(Double move) {
         this.move = move;
     }
 
@@ -81,7 +81,7 @@ public class RateItemDto {
         return amount;
     }
 
-    public void setAmount(final Double amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
@@ -89,7 +89,7 @@ public class RateItemDto {
         return valBuy;
     }
 
-    public void setValBuy(final Double valBuy) {
+    public void setValBuy(Double valBuy) {
         this.valBuy = valBuy;
     }
 
@@ -97,7 +97,7 @@ public class RateItemDto {
         return valSell;
     }
 
-    public void setValSell(final Double valSell) {
+    public void setValSell(Double valSell) {
         this.valSell = valSell;
     }
 
@@ -105,7 +105,7 @@ public class RateItemDto {
         return currMid;
     }
 
-    public void setCurrMid(final Double currMid) {
+    public void setCurrMid(Double currMid) {
         this.currMid = currMid;
     }
 
@@ -113,7 +113,7 @@ public class RateItemDto {
         return version;
     }
 
-    public void setVersion(final Double version) {
+    public void setVersion(Double version) {
         this.version = version;
     }
 
@@ -121,7 +121,7 @@ public class RateItemDto {
         return cnbMid;
     }
 
-    public void setCnbMid(final Double cnbMid) {
+    public void setCnbMid(Double cnbMid) {
         this.cnbMid = cnbMid;
     }
 
@@ -129,7 +129,7 @@ public class RateItemDto {
         return ecbMid;
     }
 
-    public void setEcbMid(final Double ecbMid) {
+    public void setEcbMid(Double ecbMid) {
         this.ecbMid = ecbMid;
     }
 
