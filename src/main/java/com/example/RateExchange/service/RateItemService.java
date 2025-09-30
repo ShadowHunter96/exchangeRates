@@ -22,8 +22,27 @@ public class RateItemService {
         this.rateItemRepository = rateItemRepository;
         this.ersteRates = ersteRates;
     }
-
+    @Transactional
     public List<RateItemDto> findAll() {
+        if (rateItemRepository.count() ==0){
+            List<RateItemDto> fetched;
+            try {
+                 fetched = ersteRates.fetchRates();
+            }catch (Exception e){
+                throw new UpstreamServiceException("Nepodařilo se stáhnout kurzy z Erste API.");
+            }
+
+            if (!fetched.isEmpty()) {
+                List<RateItem> toSave = fetched.stream()
+                        .map(this::mapToEntity)
+                        .toList();
+
+                rateItemRepository.saveAll(toSave);
+                rateItemRepository.flush();
+            }
+        }
+
+
         List<RateItem> rateItems = rateItemRepository.findAll(Sort.by("id"));
         return rateItems.stream()
                 .map(rateItem -> mapToDTO(rateItem, new RateItemDto()))
@@ -33,25 +52,14 @@ public class RateItemService {
 
     @Transactional
     public List<RateItemDto> getRates(boolean usedb) {
-        var remoteRates = ersteRates.fetchRates();
-        if (remoteRates == null || remoteRates.isEmpty()) {
-            throw new UpstreamServiceException("No data from API.");
-        }
 
-        if (usedb) {
-            rateItemRepository.deleteAllInBatch();
-            rateItemRepository.saveAll(remoteRates.stream()
-                    .map(this::mapToEntity)
-                    .toList());
-            return findAll();
+        if (!usedb) {
+            return ersteRates.fetchRates();
         } else {
-            return remoteRates;
+
+            return findAll();
         }
     }
-
-
-
-
 
     private RateItemDto mapToDTO(RateItem rateItem, RateItemDto rateItemDTO) {
 

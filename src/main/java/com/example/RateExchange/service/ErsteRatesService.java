@@ -4,6 +4,8 @@ import com.example.RateExchange.dto.RateItemDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Value;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,12 +19,11 @@ import java.util.List;
 public class ErsteRatesService {
     private final RestTemplate rt = new RestTemplate();
 
-    private static final String URL =
-            "https://webapi.developers.erstegroup.com/api/csas/public/sandbox/v2/rates/exchangerates" +
-                    "?web-api-key=c52a0682-4806-4903-828f-6cc66508329e";
+    @Value("${erste.api.url}")
+    private String url;
 
     public List<RateItemDto> fetchRates() {
-        ResponseEntity<RateItemDto[]> resp = rt.getForEntity(URL, RateItemDto[].class);
+        ResponseEntity<RateItemDto[]> resp = rt.getForEntity(url, RateItemDto[].class);
         RateItemDto[] body = resp.getBody();
         if (body == null) throw new IllegalStateException("Empty body from Erste API");
         return Arrays.asList(body);

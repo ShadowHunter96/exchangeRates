@@ -1,9 +1,64 @@
+version: "3.9"
+
+name: rateexchange
+
 services:
   postgres:
-    image: 'postgres:latest'
+    profiles: ["infra"]
+    image: postgres:16
+    container_name: rateexchange-postgres
     environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: secret
+      TZ: Europe/Prague
     ports:
-      - '5432'
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myuser -d mydatabase"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+    # Tohle pomáhá Spring Bootu 3.5+ automaticky najít databázi
+    labels:
+      org.springframework.boot.service-connection: postgres
+
+  app:
+    profiles: ["app"]
+    container_name: rateexchange-app
+    # VARIANTA A) build z lokálního Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # VARIANTA B) hotový image z registru (použij místo build:)
+    # image: ghcr.io/<owner>/<repo>:latest
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mydatabase
+      SPRING_DATASOURCE_USERNAME: myuser
+      SPRING_DATASOURCE_PASSWORD: secret
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_PROFILES_ACTIVE: docker
+      # Konfigurovatelná URL pro Erste API (stejný klíč jako v application.properties)
+      ERSTE_API_URL: https://webapi.developers.erstegroup.com/api/csas/public/sandbox/v2/rates/exchangerates?web-api-key=c52a0682-4806-4903-828f-6cc66508329e
+      TZ: Europe/Prague
+      JAVA_TOOL_OPTIONS: "-XX:+UseContainerSupport -XX:MaxRAMPercentage=75 -Dfile.encoding=UTF-8"
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    healthcheck:
+      # Pokud máš Actuator: management.endpoints.web.exposure.include=health
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep UP || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 40
+      start_period: 20s
+
+volumes:
+  pg_data:
