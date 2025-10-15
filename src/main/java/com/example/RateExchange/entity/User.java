@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import static jakarta.persistence.CascadeType.MERGE;
+import static jakarta.persistence.CascadeType.PERSIST;
+
 /**
  * Created by User: Vu
  * Date: 28.09.2025
@@ -27,6 +30,11 @@ public class User {
     private String lastName;
     @Column(unique = true)
     private String login;
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private String password;
+    @OneToOne(cascade = {PERSIST, MERGE})
+    @JoinColumn(name = "offer_id", referencedColumnName = "id", unique = true)
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    private Offer offer;
 }
 

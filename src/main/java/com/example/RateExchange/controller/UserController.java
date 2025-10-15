@@ -61,6 +61,15 @@ public class UserController {
         return ResponseEntity.ok(userService.findUserPage(filter));
     }
 
+    @PostMapping("/assign-offer")
+    public ResponseEntity<User> assignOffer(
+                    @RequestParam long userId,
+                    @RequestParam long offerId){
+        User user = userService.assignOfferToUser(userId, offerId);
+        return ResponseEntity.ok(user);
+
+    }
+
 
 
 
