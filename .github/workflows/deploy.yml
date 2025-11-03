@@ -1,0 +1,22 @@
+name: Deploy to local runner
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build app with Maven
+        run: mvn clean install -DskipTests
+
+      - name: Deploy using Docker Compose
+        run: |
+          docker compose down
+          docker compose up -d --build
