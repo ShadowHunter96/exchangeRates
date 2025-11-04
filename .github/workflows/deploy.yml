@@ -25,4 +25,3 @@ jobs:
 
       - name: Build app with Maven
         run: mvn -B clean install -DskipTests
-
