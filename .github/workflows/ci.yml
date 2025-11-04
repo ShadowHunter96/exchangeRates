@@ -1,9 +1,5 @@
 name: CI
-
-on:
-  pull_request:
-  push:
-    branches: [ main ]
+on: [push, pull_request]
 
 jobs:
   build-test:
@@ -15,5 +11,5 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
-      - name: Build & test
+      - name: Build & test (spustí se Testcontainers)
         run: mvn -B clean verify
