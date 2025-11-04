@@ -26,9 +26,3 @@ jobs:
       - name: Build app with Maven
         run: mvn -B clean install -DskipTests
 
-      - name: Deploy using Docker Compose
-        env:
-          DOCKER_HOST: 'npipe:////./pipe/dockerDesktopLinuxEngine'   # pro Windows Docker Desktop
-        run: |
-          docker compose -f compose.yaml down || echo "Nothing to stop"
-          docker compose -f compose.yaml up -d --build --remove-orphans
